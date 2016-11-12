@@ -7,9 +7,9 @@ Generic treemap, based on http://bost.ocks.org/mike/treemap/
     <head>
         <meta charset="utf-8">
         <title>Mahrashtra UDISE Treemap</title>
-        
+
         <style>
-                
+
             #chart {
               background: #fff;
               font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -70,13 +70,13 @@ Generic treemap, based on http://bost.ocks.org/mike/treemap/
     </head>
 
     <body>
-        
+
         <div id="chart"></div>
         <form>
           <label><input type="radio" name="mode" value="Electricity" checked> Electricity</label>
           <label><input type="radio" name="mode" value="Playground"> Playground</label>
         </form>
-        
+
         <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
         <script src="http://d3js.org/d3.v3.min.js"></script>
         <script>
@@ -93,7 +93,7 @@ Generic treemap, based on http://bost.ocks.org/mike/treemap/
                 margin: {top: 24, right: 0, bottom: 0, left: 0},
                 rootname: "TOP",
               //  format: ",d",
-                format: ",.1%",	
+                format: ",.1%",
                 title: "",
                 width: 1110,
                 height: 700
@@ -215,9 +215,9 @@ Generic treemap, based on http://bost.ocks.org/mike/treemap/
               }
 
               function display(d) {
-                
+
                 var test = d.Electricity;
-                  
+
                 grandparent
                     .datum(d.parent)
                     .on("click", transition)
@@ -244,7 +244,7 @@ Generic treemap, based on http://bost.ocks.org/mike/treemap/
                     .attr("class", "child")
                     .call(rect)
                   .append("title")
-                    .text(function(d) { 
+                    .text(function(d) {
                         if(selection=="Electricity"){
                             return d.key + " (" + formatNumber(d.Electricity/d.Count) + ")";
                         }
@@ -264,24 +264,25 @@ Generic treemap, based on http://bost.ocks.org/mike/treemap/
                 var t = g.append("text")
                     .attr("class", "ptext")
                     .attr("dy", ".75em")
+                    .style("text-shadow", "0px 0px 14px yellow");
 
                 t.append("tspan")
                     .text(function(d) { return d.key; });
                 t.append("tspan")
                     .attr("dy", "1.0em")
-                    .text(function(d) { 
+                    .text(function(d) {
                     if(selection=="Electricity"){
                             return  " (" + formatNumber(d.Electricity/d.Count) + ")";
                         }
                     else{
                             return  " (" + formatNumber(d.Playground/d.Count) + ")";
-                        } 
+                        }
                 });
                 t.call(text);
 
                 g.selectAll("rect")
-                    .style("fill", function(d) { 
-                        if(selection == "Electricity") 
+                    .style("fill", function(d) {
+                        if(selection == "Electricity")
                             {return color((d.Electricity/d.Count));}
                         else
                             {return color((d.Playground/d.Count));}
@@ -358,14 +359,14 @@ Generic treemap, based on http://bost.ocks.org/mike/treemap/
                     ? name(d.parent) + " / " + d.key + " (" + formatNumber(d.Playground/d.Count) + ")"
                     : d.key ;
                 }
-                      
-                  
+
+
               }
-            
+
               d3.selectAll("input").on("change", function change() {
                 selection = this.value;
                 console.log(selection);
-                display(root); 
+                display(root);
 //                d3.selectAll("g").selectAll("rect")
 //                    .style("fill", function(d) { return color((d.Electricity/d.Count)); });
               });
@@ -380,9 +381,9 @@ Generic treemap, based on http://bost.ocks.org/mike/treemap/
                     }
                 });
             }
-            
-            
 
-        </script>                                           
+
+
+        </script>
     </body>
 </html>
