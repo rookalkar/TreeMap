@@ -1,0 +1,86 @@
+            @font-face 
+            {
+                font-family: Dosis;
+                src: /Dosis/Dosis-Medium.tiff ;
+            }
+            #chart {
+              background: #fff;
+/*                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+/*                font-family: 'Open Sans Condensed', sans-serif;*/
+                font-family: "Dosis";
+                width: 90%;
+                margin-left: auto; 
+                margin-right: auto;
+            }
+            
+            #dropdown{
+                display: inline-block;
+            }
+            #dropdown{
+
+                margin-left:7%; 
+                margin-bottom: 0.5%;
+            }
+            
+            #facility{
+                line-height: 10%;
+                margin: auto;
+            }
+            
+            .ctext{
+                font-family: "Dosis";
+                font-size: "small";
+            }
+
+            .title {
+                font-family: "Dosis";
+                font-weight: bold;
+                font-size: 24px;
+                text-align: center;
+                margin-top: 6px;
+                margin-bottom: 6px;
+            }
+            text {
+              pointer-events: none;
+            }
+
+            .grandparent text {
+              font-weight: bold;
+            }
+
+            rect {
+              fill: none;
+              stroke: #fff;
+            }
+
+            rect.parent,
+            .grandparent rect {
+              stroke-width: 2px;
+            }
+
+            rect.parent {
+                pointer-events: none;
+            }
+
+            .grandparent rect {
+              fill: orange;
+            }
+
+            .grandparent:hover rect {
+              fill: #ee9700;
+            }
+
+            .children rect.parent,
+            .grandparent rect {
+              cursor: pointer;
+            }
+
+            .children rect.parent {
+/*              fill: #bbb;*/
+              fill-opacity: .5;
+            }
+
+            .children:hover rect.child {
+/*                fill: #bbb;*/
+                opacity: 0.8;
+            }
