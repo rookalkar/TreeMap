@@ -8,16 +8,16 @@
             var defaults = {
                 margin: {top: 24, right: 0, bottom: 0, left: 0},
                 rootname: "TOP",
-                format: ",.1%",	
+                format: ",.1%",
                 title: "",
                 width: window.innerWidth,
                 height: window.innerHeight
             };
             var data_F1 = [], data_F2 = [];
-            
+
             var division_selected,
                 counter = 0,
-                selection = "Electricity";
+                selection = "Playground";
 
             function main(o, data) {
               var root,
@@ -25,11 +25,11 @@
                   rname = opts.rootname,
                   margin = opts.margin,
                   theight = 36 + 16;
-                
+
               var width = $('#chart').width(),
                     height = window.innerHeight*0.8,
                     transitioning;
-                
+
               var color = d3.scale.linear()
                     .domain([0.5,1])
                     .range(["#CFD2DE","#373F68"]);
@@ -48,7 +48,7 @@
                   .ratio(height / width * 0.5 * (1 + Math.sqrt(5)))
                   .round(false);
 
-              var svg = d3.select("#chart").append("svg")
+              var svg = d3.selectAll("svg")
                   .attr("width", width + margin.left + margin.right)
                   .attr("height", height + margin.bottom + margin.top)
                   .style("margin-left", -margin.left + "px")
@@ -93,13 +93,13 @@
                   var rounded = d3.format("r");
                   return rounded((d*100).toFixed(2));
               }
-                
+
               function camelize(str) {
                   return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
                     return index == 0 ? letter.toUpperCase() : letter.toLowerCase();
                   }).replace(/\s+/g, '');
                 }
-              
+
               function initialize(root) {
                 root.x = root.y = 0;
                 root.dx = width;
@@ -139,7 +139,7 @@
               }
 
               function display(d) {
-                  
+
                 grandparent
                     .datum(d.parent)
                     .on("click", transition)
@@ -164,7 +164,7 @@
                         return d.key;
                     })
                   .enter().append("g")
-                    
+
 
                 children.append("rect")
                     .attr("class", "child")
@@ -173,8 +173,8 @@
                         return d.key;
                     })
                     .append("title")
-                    .text(function(d) { 
-                    
+                    .text(function(d) {
+
                         switch(selection){
                             case "Electricity":
                                 return  d.key + " (" + formatNumber(d.Electricity/d.Count) + "%)";
@@ -188,9 +188,9 @@
                                 return  d.key + " (" + formatNumber(d.Clmajor/d.Clrooms) + "%)";
                             case "MnClassrooms" :
                                 return  d.key + " (" + formatNumber(d.Clminor/d.Clrooms) + "%)";
-                            case "ToiletB" :    
+                            case "ToiletB" :
                                 return  d.key + " (" + formatNumber(d.Toilet_B) + ")";
-                            case "ToiletG" :    
+                            case "ToiletG" :
                                 return  d.key + " (" + formatNumber(d.Toilet_G) + ")";
                             case "CAL" :
                                 return  d.key + " (" + formatNumber(d.CAL/d.Count) + "%)";
@@ -205,30 +205,32 @@
                         }
 
                 });
-                
+
                   children.append("text")
                     .attr("class", "ctext")
                     .text(function(d) { return (d.key); })
-                    .call(text2);
+                    .call(text2)
+                    ;
 
                 g.append("rect")
                     .attr("class", "parent")
                     .call(rect)
                     .attr("id",function(d){
                         return d.key;
-                    });;
+                    })
+                    ;
 
                 var t = g.append("text")
                     .attr("class", "ptext")
                     .attr("dy", ".75em")
-                    
+
 
                 t.append("tspan")
                     .text(function(d) { return d.key; });
                 t.append("tspan")
                     .attr("dy", "1.0em")
                     .text(function(d) {
-                    
+
                     switch(selection){
                             case "Electricity":
                                 return  " (" + formatNumber(d.Electricity/d.Count) + "%)";
@@ -242,9 +244,9 @@
                                 return  " (" + formatNumber(d.Clmajor/d.Clrooms) + "%)";
                             case "MnClassrooms" :
                                 return  " (" + formatNumber(d.Clminor/d.Clrooms) + "%)";
-                            case "ToiletB" :    
+                            case "ToiletB" :
                                 return  " (" + formatNumber(d.Toilet_B) + ")";
-                            case "ToiletG" :    
+                            case "ToiletG" :
                                 return  " (" + formatNumber(d.Toilet_G) + ")";
                             case "CAL" :
                                 return  " (" + formatNumber(d.CAL/d.Count) + "%)";
@@ -257,13 +259,21 @@
                             case "Meal" :
                                 return  " (" + Math.min(formatNumber(d.MDM/d.Count),100) + "%)";
                         }
-                     
+
                 });
-                  
+
                 t.call(text);
 
+                svg.append("rect")
+                   .attr('x', 0)
+                   .attr('y', 0)
+                   .attr('id', 'hover-effect')
+                   .attr('width', 0)
+                   .attr('height', 0)
+                   ;
+
                 g.selectAll("rect")
-                    .style("fill", function(d) { 
+                    .style("fill", function(d) {
                         var color;
                         switch(selection){
                             case "Electricity":
@@ -332,9 +342,35 @@
                                                 .range(["#CFD2DE","#ff5400"]);
                                 return color((d.MDM/d.Count));
                         }
-                    });
+                    })
+                    .on("mouseover", function(){
+                        for(var i = 0; i< $(".children").length ; i++){
+                          for( var j = 0; j < $($(".children")[i]).children().length ; j++){
+                              for( var k = 0; k < $($($(".children")[i]).children()[j]).children().length ; k++){
+                                  if($($($(".children")[i]).children()[j]).children()[k].getAttribute('id') == this.getAttribute('id')){
+                                    svg.select("#hover-effect")
+//                                       .transition()
+//                                       .duration(200)
+                                       .attr('x', d3.select(($(".children")[i])).selectAll(".parent")[0][0].getAttribute('x'))
+                                       .attr('y', d3.select(($(".children")[i])).selectAll(".parent")[0][0].getAttribute('y'))
+                                       .attr('width', d3.select(($(".children")[i])).selectAll(".parent")[0][0].getAttribute('width'))
+                                       .attr('height', d3.select(($(".children")[i])).selectAll(".parent")[0][0].getAttribute('height'))
+                                       ;
+                                  }
+                              }
+                          }
+                        }
+                    })
+                    ;
+
 
                 function transition(d) {
+                  svg.select("#hover-effect")
+//                     .transition()
+//                     .duration(50)
+                     .attr('width', 0)
+                     .attr('height', 0)
+                     ;
                   if (transitioning || !d) return;
                   transitioning = true;
 
@@ -368,25 +404,25 @@
                     svg.style("shape-rendering", "crispEdges");
                     transitioning = false;
                   });
-                    
+
                 }
-                    
-                  
+
+
                   var temp = $('.ctext')
                   for (var i=0;i< temp.length; i++){
                         var text_width = temp[i].scrollWidth;
                         var rect_width = temp[i].parentNode.children[0].width.animVal.value;
                         var rect_x = temp[i].parentNode.children[0].getBBox().x;
-                      
+
                         var rect_height = temp[i].parentNode.children[0].getBBox().height;
                         if ((rect_height < 10) || (rect_width < 5)){
                             temp[i].style.cssText = "opacity: 0;"
                         }
-                        
+
                   }
-                    
+
                   return g;
-                  
+
               }
 
               function text(text) {
@@ -466,64 +502,64 @@
                                 ? name(d.parent) + " / " + d.key + " (" + Math.min(formatNumber(d.MDM/d.Count),100) + "%)"
                                 : d.key ;
                         }
-                      
-                  
+
+
               }
+
             
-            d3.selectAll("#facility").on("change",function()
-            {
-                selection = document.getElementById("facility").value;
+            d3.selectAll(".facility").on("click",function(){
                 
-                $('svg').remove(); $('.title').remove();
+                selection = this.value;
+                $('svg').empty(); $('.title').empty();
                 switch(selection){
                             case "Electricity":
-                                main({title: "Maharashtra DISE Facility Data"}, {key: "MAHARASHTRA", values: data_F1});
+                                main({title: "Electricity"}, {key: "MAHARASHTRA", values: data_F1});
                                 break;
                             case "Playground" :
-                                main({title: "Maharashtra DISE Facility Data"}, {key: "Maharashtra", values: data_F1});
+                                main({title: "Playground"}, {key: "Maharashtra", values: data_F1});
                                 break;
                             case "Water" :
-                                main({title: "Maharashtra DISE Facility Data"}, {key: "Maharashtra", values: data_F1});
+                                main({title: "Water"}, {key: "Maharashtra", values: data_F1});
                                 break;
                             case "GClassrooms" :
-                                main({title: "Maharashtra DISE Facility Data"}, {key: "Maharashtra", values: data_F2});
+                                main({title: "Good Classrooms"}, {key: "Maharashtra", values: data_F2});
                                 break;
                             case "MjClassrooms" :
-                                main({title: "Maharashtra DISE Facility Data"}, {key: "Maharashtra", values: data_F2});
+                                main({title: "Classrooms needing Major Repair"}, {key: "Maharashtra", values: data_F2});
                                 break;
                             case "MnClassrooms" :
+                                main({title: "Classrooms needing Minor Repair"}, {key: "Maharashtra", values: data_F2});
+                                break;
+                            case "ToiletB" :
                                 main({title: "Maharashtra DISE Facility Data"}, {key: "Maharashtra", values: data_F2});
                                 break;
-                            case "ToiletB" :   
-                                main({title: "Maharashtra DISE Facility Data"}, {key: "Maharashtra", values: data_F2});
-                                break;
-                            case "ToiletG" :    
+                            case "ToiletG" :
                                 main({title: "Maharashtra DISE Facility Data"}, {key: "Maharashtra", values: data_F2});
                                 break;
                             case "CAL" :
-                                main({title: "Maharashtra DISE Facility Data"}, {key: "Maharashtra", values: data_F2});
+                                main({title: "Computer Aided Labs"}, {key: "Maharashtra", values: data_F2});
                                 break;
                             case "Library" :
-                                main({title: "Maharashtra DISE Facility Data"}, {key: "Maharashtra", values: data_F1});
+                                main({title: "Library"}, {key: "Maharashtra", values: data_F1});
                                 break;
                             case "Medical" :
-                                main({title: "Maharashtra DISE Facility Data"}, {key: "Maharashtra", values: data_F1});
+                                main({title: "Medical Checkups"}, {key: "Maharashtra", values: data_F1});
                                 break;
                             case "Ramp" :
-                                main({title: "Maharashtra DISE Facility Data"}, {key: "Maharashtra", values: data_F1});
+                                main({title: "Ramps"}, {key: "Maharashtra", values: data_F1});
                                 break;
                             case "Meal" :
-                                main({title: "Maharashtra DISE Facility Data"}, {key: "Maharashtra", values: data_F2});
+                                main({title: "Mid Day Meals"}, {key: "Maharashtra", values: data_F2});
                                 break;
-                        } 
-            })
-            
+                        }
+            }) 
+
             }
 
             function convert(a){
-                
+
                 a.forEach(function(element){
-                                    
+
                     element.value = +element.value;
                     element.Water = +element.Water;
                     element.Toilet_B = +element.Toilet_B;
@@ -543,23 +579,23 @@
                     element.Bookinlib = +element.Bookinlib;
                     element.Bndrywall = +element.Bndrywall;
                     element.Ramps = +element.Ramps;
-                                    
+
                     if(element.values)
                     {
                         convert(element.values);
                     }
                 })
             }
-            
+
             function start(){
                 if (window.location.hash === "") {
-                    
-                    d3.json("Facility_1.json", function(err, res) { //Electricity, Library, Playground, Books, Water, Medical, Ramps, Computer 
+
+                    d3.json("Facility_1.json", function(err, res) { //Electricity, Library, Playground, Books, Water, Medical, Ramps, Computer
                         if (!err) {
                             data_F1 = res;
                             convert(data_F1);
-                            
-                            main({title: "Maharashtra DISE Facility Data"}, {key: "MAHARASHTRA", values: data_F1});
+
+                            main({title: "Playground"}, {key: "MAHARASHTRA", values: data_F1});
 
                         }
                     });
@@ -569,7 +605,7 @@
                             convert(data_F2);
                         }
                     });
-                }      
+                }
             }
-            
+
             start();
